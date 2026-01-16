@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upgrade to Pro - Job Copilot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0a0a0b;
+      --bg-secondary: #111113;
+      --bg-tertiary: #1a1a1d;
+      --text-primary: #fafafa;
+      --text-secondary: #a1a1aa;
+      --text-muted: #71717a;
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --success: #22c55e;
+      --border: #27272a;
+      --border-light: #3f3f46;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding: 40px 24px;
+    }
+    
+    .container { max-width: 900px; margin: 0 auto; }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    
+    .header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    
+    .header p {
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+    
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+    
+    @media (max-width: 768px) {
+      .pricing-grid { grid-template-columns: 1fr; }
+    }
+    
+    .pricing-card {
+      position: relative;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px 24px;
+      text-align: center;
+    }
+    
+    .pricing-card.featured {
+      border-color: var(--accent);
+      background: linear-gradient(180deg, rgba(99, 102, 241, 0.1) 0%, transparent 100%);
+    }
+    
+    .plan-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 6px 16px;
+      background: var(--accent);
+      color: white;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 20px;
+    }
+    
+    .plan-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+    }
+    
+    .plan-price {
+      margin-bottom: 8px;
+    }
+    
+    .currency {
+      font-size: 20px;
+      color: var(--text-secondary);
+    }
+    
+    .amount {
+      font-size: 48px;
+      font-weight: 700;
+    }
+    
+    .period {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+    
+    .plan-savings {
+      display: inline-block;
+      padding: 4px 12px;
+      background: rgba(34, 197, 94, 0.15);
+      color: var(--success);
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 4px;
+      margin-bottom: 24px;
+    }
+    
+    .plan-features {
+      list-style: none;
+      text-align: left;
+      margin-bottom: 24px;
+    }
+    
+    .plan-features li {
+      padding: 10px 0;
+      font-size: 14px;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .plan-features li:last-child { border-bottom: none; }
+    
+    .plan-features li::before {
+      content: "✓";
+      color: var(--success);
+      font-weight: bold;
+    }
+    
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 14px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+    
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+    
+    .btn-primary:hover { background: var(--accent-hover); }
+    
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border-light);
+      color: var(--text-secondary);
+    }
+    
+    .btn-outline:hover {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+    
+    .trust-section {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      padding: 24px;
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      margin-bottom: 32px;
+    }
+    
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    
+    .footer {
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal.active { display: flex; }
+    
+    .modal-content {
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      padding: 32px;
+      max-width: 400px;
+      text-align: center;
+    }
+    
+    .modal h3 {
+      font-size: 20px;
+      margin-bottom: 16px;
+    }
+    
+    .modal p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+    
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--bg-tertiary);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 16px;
+    }
+    
+    @keyframes spin { to { transform: rotate(360deg); } }
+    
+    .success-icon {
+      width: 64px;
+      height: 64px;
+      background: rgba(34, 197, 94, 0.15);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      font-size: 32px;
+      color: var(--success);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Upgrade to Pro</h1>
+      <p>Unlock unlimited analyses and AI-powered features</p>
+    </div>
+    
+    <div class="pricing-grid">
+      <div class="pricing-card" data-plan="monthly">
+        <div class="plan-name">Monthly</div>
+        <div class="plan-price">
+          <span class="currency">Rs.</span><span class="amount">149</span>
+        </div>
+        <div class="period">/month</div>
+        <div style="height: 24px"></div>
+        <ul class="plan-features">
+          <li>Unlimited job analyses</li>
+          <li>AI interview answers</li>
+          <li>Cover letter generation</li>
+          <li>Priority support</li>
+        </ul>
+        <button class="btn btn-outline" onclick="selectPlan('monthly')">Select</button>
+      </div>
+      
+      <div class="pricing-card featured" data-plan="quarterly">
+        <div class="plan-badge">Best Value</div>
+        <div class="plan-name">Quarterly</div>
+        <div class="plan-price">
+          <span class="currency">Rs.</span><span class="amount">399</span>
+        </div>
+        <div class="period">/3 months</div>
+        <div class="plan-savings">Save 25%</div>
+        <ul class="plan-features">
+          <li>Everything in Monthly</li>
+          <li>3 months access</li>
+          <li>Extended analytics</li>
+          <li>Email support</li>
+        </ul>
+        <button class="btn btn-primary" onclick="selectPlan('quarterly')">Select</button>
+      </div>
+      
+      <div class="pricing-card" data-plan="yearly">
+        <div class="plan-name">Yearly</div>
+        <div class="plan-price">
+          <span class="currency">Rs.</span><span class="amount">999</span>
+        </div>
+        <div class="period">/year</div>
+        <div class="plan-savings">Save 44%</div>
+        <ul class="plan-features">
+          <li>Everything in Monthly</li>
+          <li>12 months access</li>
+          <li>VIP support</li>
+          <li>Early feature access</li>
+        </ul>
+        <button class="btn btn-outline" onclick="selectPlan('yearly')">Select</button>
+      </div>
+    </div>
+    
+    <div class="trust-section">
+      <div class="trust-item">Secure Payment</div>
+      <div class="trust-item">Cancel Anytime</div>
+      <div class="trust-item">Instant Access</div>
+    </div>
+    
+    <div class="footer">
+      <p>Prices in Indian Rupees. Powered by Razorpay.</p>
+    </div>
+  </div>
+  
+  <div class="modal" id="processingModal">
+    <div class="modal-content">
+      <div class="spinner"></div>
+      <h3>Processing</h3>
+      <p>Redirecting to payment...</p>
+    </div>
+  </div>
+  
+  <div class="modal" id="successModal">
+    <div class="modal-content">
+      <div class="success-icon">✓</div>
+      <h3>Welcome to Pro!</h3>
+      <p>Your account has been upgraded. Enjoy unlimited access!</p>
+      <button class="btn btn-primary" onclick="window.close()">Continue</button>
+    </div>
+  </div>
+
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script>
+    const API_URL = 'http://localhost:3000';
+    
+    async function selectPlan(plan) {
+      document.getElementById('processingModal').classList.add('active');
+      
+      try {
+        const response = await fetch(`${API_URL}/api/payment/create-order`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ plan })
+        });
+        
+        if (!response.ok) throw new Error('Failed to create order');
+        
+        const data = await response.json();
+        const order = data.order;
+        
+        document.getElementById('processingModal').classList.remove('active');
+        
+        const options = {
+          key: order.key_id,
+          amount: order.amount,
+          currency: order.currency,
+          name: 'Job Copilot Pro',
+          description: order.plan.description,
+          order_id: order.order_id,
+          handler: async function(response) {
+            await verifyPayment(response);
+          },
+          theme: { color: '#6366f1' }
+        };
+        
+        const rzp = new Razorpay(options);
+        rzp.open();
+        
+      } catch (error) {
+        document.getElementById('processingModal').classList.remove('active');
+        alert('Payment initialization failed. Please try again.');
+        console.error(error);
+      }
+    }
+    
+    async function verifyPayment(paymentResponse) {
+      try {
+        const response = await fetch(`${API_URL}/api/payment/verify`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(paymentResponse)
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          // Save to extension storage if available
+          if (typeof chrome !== 'undefined' && chrome.storage) {
+            chrome.storage.local.set({
+              user_tier: 'pro',
+              payment_verified: true,
+              upgraded_at: new Date().toISOString()
+            });
+          }
+          
+          document.getElementById('successModal').classList.add('active');
+        } else {
+          alert('Payment verification failed. Contact support.');
+        }
+        
+      } catch (error) {
+        alert('Verification error. Contact support.');
+        console.error(error);
+      }
+    }
+  </script>
+</body>
+</html>

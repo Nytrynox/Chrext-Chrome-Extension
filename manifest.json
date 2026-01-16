@@ -1,0 +1,70 @@
+{
+  "manifest_version": 3,
+  "name": "AI Job Application Copilot",
+  "version": "1.0.0",
+  "description": "Intelligent job matching assistant that helps you decide whether to apply and speeds up applications (no auto-submit).",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "background": {
+    "service_worker": "background/service-worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.linkedin.com/jobs/*"
+      ],
+      "js": ["content-scripts/linkedin-parser.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["*://*.indeed.com/*"],
+      "js": ["content-scripts/indeed-parser.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["*://boards.greenhouse.io/*/*"],
+      "js": ["content-scripts/greenhouse-parser.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["*://jobs.lever.co/*/*"],
+      "js": ["content-scripts/lever-parser.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content-scripts/generic-parser.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "alarms"
+  ],
+  "host_permissions": [
+    "*://*.linkedin.com/*",
+    "*://*.indeed.com/*",
+    "*://boards.greenhouse.io/*",
+    "*://jobs.lever.co/*",
+    "http://localhost:3000/*"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["icons/*"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
